@@ -11,9 +11,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/v1/auth', authRoutes);
-app.get('/', (req, res) => {
-    res.send('hello world');
-})
+
 
 app.listen(process.env.PORT, ()=> {
     connectionToDb();
