@@ -1,5 +1,7 @@
 import axios from "axios";
 import Workout from "../models/workouts.model.js";
+import UserWorkout from "../models/user.workout.model.js";
+
 
 // px5d3cstj imagekit id
 
@@ -55,8 +57,8 @@ export const allWorkouts = async (req, res) => {
 
 export const addWorkout = async (req, res) => {
     const {name, muscle} = req.body;
-    // console.log(obj)
-    // console.log(name,muscle);
+    const loggedUser = req.user._id;
+    
     try{
         if(!req.body){
             res.status(404).json({
@@ -65,11 +67,44 @@ export const addWorkout = async (req, res) => {
             });
         }
 
+        const isWorkout = await Workout.findOne({name})
+        if(isWorkout){
+            return res.status(500).json({
+                success: false,
+                message: 'Workout already exists',
+            })
+        }
+        let userWorkout = await UserWorkout.findOne({userId: loggedUser})
+
+        if (!userWorkout) {
+            userWorkout = await UserWorkout.create({
+                userId: loggedUser,
+            })
+        }
+
+        const newWorkout = new Workout({
+            userId: loggedUser,
+            name,
+            muscle,
+        })
+
+        if(newWorkout) {
+            userWorkout.workouts.push(newWorkout._id);
+        }
+
+        await userWorkout.save();
+        await newWorkout.save();
+
+        res.status(201).json({
+            success: true,
+            message: "Workout Added Successfully"
+        })
+
 
     }catch (error) {
         res.status(404).json({
             success: false,
-            message: `Unable to add workout: ${error.message}`,
+            message: `Unable to add workout: ${error}`,
         })
     }
 }

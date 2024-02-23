@@ -12,15 +12,14 @@ const workoutSchema = new mongoose.Schema({
   },
   muscle: {
     type: String,
-    required: true,
+
   },
   instructions: {
     type: String,
-    required: true,
+    
   },
   equipment: {
     type: String,
-    required: true,
   },
 });
 
