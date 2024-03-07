@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js';
 import workoutRoutes from './routes/workout.routes.js';
 import connectionToDb from './db/db.js';
+import postRoutes from './routes/post.routes.js';
 
 dotenv.config();
 const app = express();
@@ -13,6 +14,7 @@ app.use(cookieParser());
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/workouts', workoutRoutes);
+app.use('/api/v1/social/post', postRoutes);
 
 
 app.listen(process.env.PORT, ()=> {
