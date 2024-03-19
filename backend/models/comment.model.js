@@ -15,6 +15,12 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  replies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Reply",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

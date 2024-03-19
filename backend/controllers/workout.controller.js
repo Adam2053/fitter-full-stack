@@ -73,7 +73,7 @@ export const addWorkout = async (req, res) => {
     }
 
     // we are checking if the workout already exists
-    const isWorkout = await Workout.findOne({ name });
+    const isWorkout = await Workout.findOne({ name, userId: loggedUser });
     if (isWorkout) {
       return res.status(500).json({
         success: false,

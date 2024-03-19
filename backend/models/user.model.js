@@ -44,7 +44,8 @@ const userSchema = new mongoose.Schema({
         bmi : {
             type: Number,
             maxlength: 4
-        }
+        },
+        
     }
 })
 

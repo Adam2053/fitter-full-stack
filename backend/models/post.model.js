@@ -30,10 +30,52 @@ const postSchema = new mongoose.Schema({
     default: 0,
   },
   comments: [
+    // {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Comment",
+    // },
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
-    },
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      postId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+        required: true,
+      },
+      comment: {
+        type: String,
+        required: true,
+      },
+      replies: [
+        {
+          userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+          },
+          commentId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment",
+            required: true,
+          },
+          reply: {
+            type: String,
+            required: true,
+          },
+          createdAt:{
+            type: Date,
+            default: Date.now
+          }
+        }
+      ],
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    }
   ],
   createdAt: {
     type: Date,

@@ -5,6 +5,8 @@ import authRoutes from './routes/auth.routes.js';
 import workoutRoutes from './routes/workout.routes.js';
 import connectionToDb from './db/db.js';
 import postRoutes from './routes/post.routes.js';
+import axios from 'axios';
+
 
 dotenv.config();
 const app = express();
