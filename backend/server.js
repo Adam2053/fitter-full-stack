@@ -6,11 +6,12 @@ import workoutRoutes from './routes/workout.routes.js';
 import connectionToDb from './db/db.js';
 import postRoutes from './routes/post.routes.js';
 import axios from 'axios';
+import cors from 'cors'
 
 
 dotenv.config();
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 

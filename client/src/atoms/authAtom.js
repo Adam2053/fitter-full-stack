@@ -8,4 +8,4 @@ const authScreenAtom = atom(
     }
 )
 
-export default authScreenAtom;
+export default authScreenAtom

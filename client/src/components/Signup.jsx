@@ -18,12 +18,40 @@ import {
   import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useSetRecoilState } from 'recoil'
 import authScreenAtom from '../atoms/authAtom'
+import loggedUserAtom from '../atoms/loggedUserAtom'
   
   export default function Signup() {
     const [showPassword, setShowPassword] = useState(false)
     const setAuthScreenState = useSetRecoilState(authScreenAtom);
-    const handleSignup = () => {
+    const setLoggedUser = useSetRecoilState(loggedUserAtom);
+    const [input, setInput] = useState({
+      userName: '',
+      password: '',
+      confirmPassword: '',
+      email: '',
+    })
+    const handleSignup = async() => {
+      try {
+        if(input.password != input.confirmPassword){
+          return alert('Passwords do not match')
+        }
+        const res = await fetch("http://localhost:8000/api/v1/auth/signup",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body: JSON.stringify(input)
+        })
+        const data = await res.json();
       
+        if(!data.success) {
+          return alert(`${data.message}`)
+        }
+        localStorage.setItem('user-thread', JSON.stringify(data.data))
+        setLoggedUser(data)
+      } catch (error) {
+        console.log(error)
+      }
     }
   
     return (
@@ -48,27 +76,40 @@ import authScreenAtom from '../atoms/authAtom'
             p={8}>
             <Stack spacing={4}>
               <HStack>
-                <Box>
+                {/* <Box>
                   <FormControl isRequired>
                     <FormLabel>Full Name</FormLabel>
                     <Input type="text" />
                   </FormControl>
-                </Box>
+                </Box> */}
                 <Box>
                   <FormControl isRequired>
                     <FormLabel>Username</FormLabel>
-                    <Input type="text" />
+                    <Input value={input.userName} onChange={(e)=> setInput({...input,userName:e.target.value})} type="text" />
                   </FormControl>
                 </Box>
               </HStack>
               <FormControl isRequired>
                 <FormLabel>Email address</FormLabel>
-                <Input type="email" />
+                <Input value={input.email} onChange={(e)=> setInput({...input,email:e.target.value})} type="email" />
               </FormControl>
               <FormControl isRequired>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
-                  <Input type={showPassword ? 'text' : 'password'} />
+                  <Input value={input.password} onChange={(e)=> setInput({...input,password:e.target.value})} type={showPassword ? 'text' : 'password'} />
+                  <InputRightElement h={'full'}>
+                    <Button
+                      variant={'ghost'}
+                      onClick={() => setShowPassword((showPassword) => !showPassword)}>
+                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+              <FormControl isRequired>
+                <FormLabel>Confirm Password</FormLabel>
+                <InputGroup>
+                  <Input value={input.confirmPassword} onChange={(e)=> setInput({...input,confirmPassword:e.target.value})} type={showPassword ? 'text' : 'password'} />
                   <InputRightElement h={'full'}>
                     <Button
                       variant={'ghost'}
@@ -94,7 +135,7 @@ import authScreenAtom from '../atoms/authAtom'
               </Stack>
               <Stack pt={6}>
                 <Text align={'center'}>
-                  Don't have an account? <Link onClick={()=> setAuthScreenState("login")} color={'blue.400'}>Sign Up</Link>
+                  Already a user? <Link onClick={()=> setAuthScreenState("login")} color={'blue.400'}>Login</Link>
                 </Text>
               </Stack>
             </Stack>
